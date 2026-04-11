@@ -15,11 +15,16 @@ export async function runResearchAgent(query: string): Promise<string> {
   try {
     const text = await generateGeminiContent(query, systemPrompt);
     
-    if (text) {
-      return text;
+    if (text && text.trim().length > 0) {
+      // Basic validation: check if it has at least some structure (e.g., sections)
+      const hasSections = text.toLowerCase().includes('overview') || text.toLowerCase().includes('outlook');
+      if (hasSections) {
+        return text;
+      }
+      throw new Error('AI_RESPONSE_MALFORMED');
     }
 
-    throw new Error('Unexpected response format from AI agent');
+    throw new Error('AI_RESPONSE_EMPTY');
   } catch (error) {
     console.error('Error in runResearchAgent:', error);
     throw error;

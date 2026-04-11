@@ -148,7 +148,20 @@ export const StellarMind: React.FC = () => {
       fetchHistory(pair.publicKey());
     } catch (err: any) {
       console.error('StellarMind Error:', err);
-      setError(err.message || 'An unexpected error occurred during the research process.');
+      
+      let userMessage = 'An unexpected error occurred during the research process.';
+      
+      if (err.message === 'AI_RESPONSE_EMPTY') {
+        userMessage = 'The AI agent returned an empty response. This can happen occasionally due to network congestion. Please try running the research again.';
+      } else if (err.message === 'AI_RESPONSE_MALFORMED') {
+        userMessage = 'The AI generated a report but it did not meet our quality standards. Please try a more specific query or run the agent again.';
+      } else if (err.message.includes('insufficient balance') || err.message.includes('underfunded')) {
+        userMessage = 'Transaction failed: Your Stellar account has insufficient XLM to cover the micropayment. Please fund your account and try again.';
+      } else if (err.message) {
+        userMessage = err.message;
+      }
+
+      setError(userMessage);
       setCurrentStep('idle');
     }
   };
