@@ -1,9 +1,9 @@
- StellarMind
+ ## StellarMind
 
-Autonomous AI research agent on Stellar. Powered by x402 micropayments 
-on Stellar testnet pay per query, no subscriptions.
+An Autonomous AI research agent on Stellar. Powered by x402 micropayments 
+on Stellar testnet pay per query.
 
-Demo link:
+Demo link: https://stellarmind-steel.vercel.app/
 Youtube:
 
 ## How It Works
