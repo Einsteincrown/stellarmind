@@ -56,6 +56,7 @@ export const StellarMind: React.FC = () => {
   const [freighterPublicKey, setFreighterPublicKey] = useState<string | null>(null);
   const [isConnectingWallet, setIsConnectingWallet] = useState(false);
   const [isIframe, setIsIframe] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
     setIsIframe(window.top !== window.self);
@@ -376,7 +377,13 @@ export const StellarMind: React.FC = () => {
               {/* Run Button */}
               <div className="mt-8 space-y-4">
                 <button 
-                  onClick={runAgent}
+                  onClick={() => {
+                    if (!query || (!secretKey && !useFreighter)) {
+                      setError('Please provide a research query and either a secret key or connect your wallet.');
+                      return;
+                    }
+                    setShowConfirmModal(true);
+                  }}
                   disabled={currentStep !== 'idle' && currentStep !== 'ready'}
                   className="w-full stellar-gradient text-white font-bold py-4 rounded-2xl shadow-xl shadow-stellar-blue/20 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-3"
                 >
@@ -563,6 +570,71 @@ export const StellarMind: React.FC = () => {
         <footer className="text-center opacity-30 text-[10px] font-bold uppercase tracking-[0.2em]">
           StellarMind Protocol · Secure Research Node · 2026
         </footer>
+
+        {/* Confirmation Modal */}
+        <AnimatePresence>
+          {showConfirmModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-stellar-navy/80 backdrop-blur-sm"
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className={`max-w-md w-full p-8 rounded-3xl border shadow-2xl ${theme === 'dark' ? 'bg-stellar-card-dark border-white/10' : 'bg-white border-stellar-navy/10'}`}
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-stellar-blue/10 flex items-center justify-center">
+                    <Sparkles className="w-6 h-6 text-stellar-blue" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">Confirm Research</h3>
+                    <p className="text-xs opacity-50 uppercase tracking-widest font-bold">x402 Protocol</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4 mb-8">
+                  <div className={`p-4 rounded-2xl ${theme === 'dark' ? 'bg-white/5' : 'bg-stellar-navy/5'}`}>
+                    <p className="text-xs opacity-50 mb-1">Query</p>
+                    <p className="text-sm font-medium line-clamp-2 italic">"{query}"</p>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-4 rounded-2xl border border-stellar-blue/20 bg-stellar-blue/5">
+                    <div>
+                      <p className="text-xs opacity-50">Network Cost</p>
+                      <p className="text-sm font-bold">0.0001 XLM</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs opacity-50">Network</p>
+                      <p className="text-sm font-bold">Stellar Testnet</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => setShowConfirmModal(false)}
+                    className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${theme === 'dark' ? 'bg-white/5 hover:bg-white/10' : 'bg-stellar-navy/5 hover:bg-stellar-navy/10'}`}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowConfirmModal(false);
+                      runAgent();
+                    }}
+                    className="flex-1 py-3 rounded-xl font-bold text-sm stellar-gradient text-white shadow-lg shadow-stellar-blue/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  >
+                    Confirm & Pay
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
