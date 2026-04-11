@@ -16,8 +16,7 @@ import {
   Check,
   History,
   ArrowUpRight,
-  ArrowDownLeft,
-  Wallet
+  ArrowDownLeft
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import * as StellarSdk from 'stellar-sdk';
