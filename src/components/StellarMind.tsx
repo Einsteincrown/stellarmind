@@ -26,10 +26,7 @@ import {
   getTransactionUrl, 
   createAccount, 
   fundAccount, 
-  getTransactionHistory,
-  isFreighterConnected,
-  getFreighterPublicKey,
-  submitFreighterMicropayment
+  getTransactionHistory
 } from '../lib/stellar';
 import { runResearchAgent } from '../lib/agent';
 
@@ -52,9 +49,6 @@ export const StellarMind: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
-  const [useFreighter, setUseFreighter] = useState(false);
-  const [freighterPublicKey, setFreighterPublicKey] = useState<string | null>(null);
-  const [isConnectingWallet, setIsConnectingWallet] = useState(false);
   const [isIframe, setIsIframe] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -69,9 +63,7 @@ export const StellarMind: React.FC = () => {
   }, [theme]);
 
   useEffect(() => {
-    if (useFreighter && freighterPublicKey) {
-      fetchHistory(freighterPublicKey);
-    } else if (secretKey) {
+    if (secretKey) {
       try {
         const pair = StellarSdk.Keypair.fromSecret(secretKey);
         fetchHistory(pair.publicKey());
@@ -81,28 +73,7 @@ export const StellarMind: React.FC = () => {
     } else {
       setHistory([]);
     }
-  }, [secretKey, useFreighter, freighterPublicKey]);
-
-  useEffect(() => {
-    let interval: any;
-    if (useFreighter) {
-      interval = setInterval(async () => {
-        try {
-          const currentAddress = await getFreighterPublicKey();
-          if (currentAddress !== freighterPublicKey) {
-            setFreighterPublicKey(currentAddress);
-          }
-        } catch (e) {
-          // Ignore errors during background check
-        }
-      }, 2000);
-    }
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [useFreighter, freighterPublicKey]);
+  }, [secretKey]);
 
   const fetchHistory = async (pubKey: string) => {
     setLoadingHistory(true);
@@ -127,7 +98,6 @@ export const StellarMind: React.FC = () => {
   const handleGenerateTestKey = async () => {
     setIsGenerating(true);
     setError(null);
-    setUseFreighter(false);
     try {
       const { publicKey, secret } = createAccount();
       await fundAccount(publicKey);
@@ -141,33 +111,9 @@ export const StellarMind: React.FC = () => {
     }
   };
 
-  const handleConnectFreighter = async () => {
-    setIsConnectingWallet(true);
-    setError(null);
-    try {
-      const connected = await isFreighterConnected();
-      if (!connected) {
-        throw new Error('Freighter wallet not found. Please install the extension and ensure it is enabled.');
-      }
-      const pubKey = await getFreighterPublicKey();
-      setFreighterPublicKey(pubKey);
-      setUseFreighter(true);
-      setSecretKey(''); // Clear secret key if using wallet
-    } catch (err: any) {
-      console.error('Freighter Error:', err);
-      let msg = err.message || 'Failed to connect to Freighter.';
-      if (isIframe) {
-        msg += ' Note: Wallet extensions may be blocked in iframes. Try opening the app in a new tab.';
-      }
-      setError(msg);
-    } finally {
-      setIsConnectingWallet(false);
-    }
-  };
-
   const runAgent = async () => {
-    if (!query || (!secretKey && !useFreighter)) {
-      setError('Please provide a research query and either a secret key or connect your wallet.');
+    if (!query || !secretKey) {
+      setError('Please provide a research query and a secret key.');
       return;
     }
 
@@ -182,12 +128,7 @@ export const StellarMind: React.FC = () => {
 
       // 2. Micropayment
       setCurrentStep('micropayment');
-      let result;
-      if (useFreighter && freighterPublicKey) {
-        result = await submitFreighterMicropayment(freighterPublicKey);
-      } else {
-        result = await submitMicropayment(secretKey);
-      }
+      const result = await submitMicropayment(secretKey);
       setTxHash(result.hash);
 
       // 3. Confirmed
@@ -203,12 +144,8 @@ export const StellarMind: React.FC = () => {
       setCurrentStep('ready');
       
       // Refresh history
-      if (useFreighter && freighterPublicKey) {
-        fetchHistory(freighterPublicKey);
-      } else {
-        const pair = StellarSdk.Keypair.fromSecret(secretKey);
-        fetchHistory(pair.publicKey());
-      }
+      const pair = StellarSdk.Keypair.fromSecret(secretKey);
+      fetchHistory(pair.publicKey());
     } catch (err: any) {
       console.error('StellarMind Error:', err);
       setError(err.message || 'An unexpected error occurred during the research process.');
@@ -290,14 +227,6 @@ export const StellarMind: React.FC = () => {
                     </label>
                     <div className="flex items-center gap-3">
                       <button 
-                        onClick={handleConnectFreighter}
-                        disabled={isConnectingWallet}
-                        className={`text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 hover:underline disabled:opacity-50 ${useFreighter ? 'text-stellar-blue' : 'text-stellar-purple'}`}
-                      >
-                        {isConnectingWallet ? <Loader2 className="w-2 h-2 animate-spin" /> : <Wallet className="w-2 h-2" />}
-                        {useFreighter ? 'Wallet Connected' : isConnectingWallet ? 'Connecting...' : 'Connect Freighter'}
-                      </button>
-                      <button 
                         onClick={handleGenerateTestKey}
                         disabled={isGenerating}
                         className="text-[10px] text-stellar-purple hover:underline font-bold uppercase tracking-wider flex items-center gap-1 disabled:opacity-50"
@@ -316,60 +245,26 @@ export const StellarMind: React.FC = () => {
                     </div>
                   </div>
                   
-                  {useFreighter ? (
-                    <div className={`w-full p-4 rounded-2xl border flex items-center justify-between ${theme === 'dark' ? 'bg-stellar-navy/50 border-white/10' : 'bg-white border-stellar-navy/10'}`}>
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-stellar-blue/10 flex items-center justify-center">
-                          <Wallet className="w-4 h-4 text-stellar-blue" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Connected Wallet</p>
-                          <p className="text-xs font-mono truncate max-w-[200px]">{freighterPublicKey}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <button 
-                          onClick={handleConnectFreighter}
-                          className="text-[10px] font-bold uppercase tracking-widest text-stellar-blue hover:underline"
-                        >
-                          Switch Account
-                        </button>
-                        <button 
-                          onClick={() => {
-                            setUseFreighter(false);
-                            setFreighterPublicKey(null);
-                          }}
-                          className="text-[10px] font-bold uppercase tracking-widest text-red-500 hover:underline"
-                        >
-                          Disconnect
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="relative">
-                      <input 
-                        type={showSecret ? "text" : "password"}
-                        value={secretKey}
-                        onChange={(e) => {
-                          setSecretKey(e.target.value);
-                          setUseFreighter(false);
-                        }}
-                        placeholder="S..."
-                        className={`w-full p-4 pr-12 rounded-2xl focus:outline-none focus:ring-2 focus:ring-stellar-blue/30 transition-all font-mono text-sm ${theme === 'dark' ? 'bg-stellar-navy/50 text-white placeholder:text-white/20' : 'bg-white text-stellar-navy placeholder:text-stellar-navy/20'}`}
-                      />
-                      <button 
-                        onClick={() => setShowSecret(!showSecret)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-100 transition-opacity"
-                      >
-                        {showSecret ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                      </button>
-                    </div>
-                  )}
+                  <div className="relative">
+                    <input 
+                      type={showSecret ? "text" : "password"}
+                      value={secretKey}
+                      onChange={(e) => {
+                        setSecretKey(e.target.value);
+                      }}
+                      placeholder="S..."
+                      className={`w-full p-4 pr-12 rounded-2xl focus:outline-none focus:ring-2 focus:ring-stellar-blue/30 transition-all font-mono text-sm ${theme === 'dark' ? 'bg-stellar-navy/50 text-white placeholder:text-white/20' : 'bg-white text-stellar-navy placeholder:text-stellar-navy/20'}`}
+                    />
+                    <button 
+                      onClick={() => setShowSecret(!showSecret)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-100 transition-opacity"
+                    >
+                      {showSecret ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
                   
                   <p className="text-[10px] opacity-40 italic">
-                    {useFreighter 
-                      ? "Using Freighter for secure, non-custodial signing. No keys are shared." 
-                      : "Your key is used only to sign the x402 micropayment locally. It is never stored."}
+                    Your key is used only to sign the x402 micropayment locally. It is never stored.
                   </p>
                 </div>
               </div>
@@ -378,8 +273,8 @@ export const StellarMind: React.FC = () => {
               <div className="mt-8 space-y-4">
                 <button 
                   onClick={() => {
-                    if (!query || (!secretKey && !useFreighter)) {
-                      setError('Please provide a research query and either a secret key or connect your wallet.');
+                    if (!query || !secretKey) {
+                      setError('Please provide a research query and a secret key.');
                       return;
                     }
                     setShowConfirmModal(true);
@@ -491,7 +386,7 @@ export const StellarMind: React.FC = () => {
           <div className="space-y-8">
             {/* Transaction History */}
             <AnimatePresence>
-              {(secretKey || useFreighter) && (
+              {secretKey && (
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -507,8 +402,7 @@ export const StellarMind: React.FC = () => {
                   <div className="space-y-3">
                     {history.length > 0 ? (
                       history.map((tx) => {
-                        const isIncoming = (useFreighter && tx.to === freighterPublicKey) || 
-                                         (!useFreighter && secretKey && tx.to === StellarSdk.Keypair.fromSecret(secretKey).publicKey());
+                        const isIncoming = secretKey && tx.to === StellarSdk.Keypair.fromSecret(secretKey).publicKey();
                         
                         return (
                           <div 
