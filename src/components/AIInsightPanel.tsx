@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Sparkles, Brain, Loader2 } from 'lucide-react';
-import { generateAnthropicContent } from '../lib/anthropic';
+import { generateGeminiContent } from '../lib/gemini';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface AIInsightPanelProps {
@@ -22,7 +22,7 @@ export const AIInsightPanel: React.FC<AIInsightPanelProps> = ({ balances }) => {
       
       const prompt = `As a Stellar blockchain expert, provide a brief, professional analysis of this account's portfolio: ${balanceStr || 'No assets found'}. Suggest one strategic move or insight about the Stellar ecosystem relevant to these assets. Keep it under 100 words. IMPORTANT: Do not use any markdown formatting, asterisks (*), or bold symbols. Use plain text only.`;
       
-      const response = await generateAnthropicContent(prompt, "You are a Stellar blockchain expert.");
+      const response = await generateGeminiContent(prompt);
       if (response) {
         setInsight(response);
       }
