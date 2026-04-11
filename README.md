@@ -2,7 +2,10 @@
 
 **Autonomous AI Research Agent on Stellar**
 
-StellarMind is an autonomous AI research agent that delivers sharp, crypto-native research reports. It is unlocked via an **x402 micropayment** on the Stellar network, ensuring a secure and verifiable value exchange for high-quality intelligence.
+StellarMind is an autonomous AI research agent that delivers sharp, crypto native research reports. It is unlocked via an x402 micropayment on the Stellar network, ensuring a secure and verifiable value exchange for high quality intelligence.
+
+Demo link: 
+Youtube: 
 
 ## ✦ How It Works
 1. **Submit Query**: User enters a research query (e.g., "Analyze the impact of Soroban on Stellar TVL").
@@ -11,24 +14,19 @@ StellarMind is an autonomous AI research agent that delivers sharp, crypto-nativ
 4. **AI Research**: Once confirmed, the StellarMind agent (powered by Claude 3.5 Sonnet) generates a structured, insightful research report.
 5. **Report Delivery**: The user receives a formatted report with Overview, Key Metrics, Recent Developments, and Outlook.
 
-## 🛠 Tech Stack
+##  Tech Stack
 - **Frontend**: React 19, TypeScript, Vite
-- **Blockchain**: Stellar SDK, Freighter API
-- **AI Engine**: Anthropic Claude 3.5 Sonnet
+- **Blockchain**: Stellar SDK
+- **AI Engine**: Gemini
 - **Styling**: Tailwind CSS 4, Framer Motion
 - **Typography**: DM Sans (Body), Space Grotesk (Headings)
 
-## 🏆 Hackathon
+## Hackathon
 **Project built for**: [Stellar Hacks: Agents · DoraHacks 2026](https://dorahacks.io/)
 
-## ✨ Features
-- **x402 Micropayment Gate**: Real onchain requirement for AI access.
-- **Verifiable Transactions**: Every research run is backed by a real Stellar testnet transaction hash.
-- **Stellar Brand Design**: Deep space navy aesthetic matching Stellar's official brand identity.
-- **Dark/Light Mode**: Persistent theme preference for optimal reading.
-- **Secure Local Signing**: Secret keys are used only for local signing and are never stored or transmitted.
 
-## 🚀 Setup
+
+## Setup
 1. **Clone the repository**:
    ```bash
    git clone <repo-url>
@@ -47,6 +45,3 @@ StellarMind is an autonomous AI research agent that delivers sharp, crypto-nativ
    ```bash
    npm run dev
    ```
-
----
-*StellarMind Protocol · Secure Research Node · 2026*
