@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 
 // Initialize Gemini API
 // Note: GEMINI_API_KEY is provided by the environment in AI Studio
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+const apiKey = process.env.GEMINI_API_KEY;
 
 export const ai = new GoogleGenAI({ 
   apiKey: apiKey || ''
@@ -13,11 +13,11 @@ export const ai = new GoogleGenAI({
  */
 export async function generateGeminiContent(prompt: string, systemInstruction?: string) {
   if (!apiKey) {
-    throw new Error('VITE_GEMINI_API_KEY is missing. Please ensure it is set in your environment secrets.');
+    throw new Error('GEMINI_API_KEY is missing. Please ensure it is set in your environment secrets.');
   }
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
+      model: "gemini-3-flash-preview",
       contents: prompt,
       config: {
         systemInstruction: systemInstruction,

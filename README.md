@@ -1,36 +1,52 @@
- ## StellarMind
+# StellarMind
 
-An Autonomous AI research agent on Stellar. Powered by x402 micropayments 
-on Stellar testnet pay per query.
+**Autonomous AI Research Agent on Stellar**
 
-Demo link: https://stellarmind-steel.vercel.app/
-Youtube:
+StellarMind is an autonomous AI research agent that delivers sharp, crypto-native research reports. It is unlocked via an **x402 micropayment** on the Stellar network, ensuring a secure and verifiable value exchange for high-quality intelligence.
 
-## How It Works
-1. User submits a research query
-2. App signs and submits a real Stellar testnet transaction (x402 micropayment)
-3. Transaction confirmed onchain with memo "StellarMind:x402"
-4. AI research agent unlocks and returns a structured report
+## ✦ How It Works
+1. **Submit Query**: User enters a research query (e.g., "Analyze the impact of Soroban on Stellar TVL").
+2. **x402 Micropayment**: The app signs and submits a real Stellar testnet transaction (0.0001 XLM) with the required memo: `StellarMind:x402`.
+3. **Onchain Confirmation**: The transaction is confirmed on the Stellar blockchain.
+4. **AI Research**: Once confirmed, the StellarMind agent (powered by Claude 3.5 Sonnet) generates a structured, insightful research report.
+5. **Report Delivery**: The user receives a formatted report with Overview, Key Metrics, Recent Developments, and Outlook.
 
-## Tech Stack
-- React + TypeScript + Vite
-- Stellar SDK — testnet transactions
-- Gemini AI — research report generation
-- Tailwind CSS — Stellar-branded UI
-- Vercel — deployment
+## 🛠 Tech Stack
+- **Frontend**: React 19, TypeScript, Vite
+- **Blockchain**: Stellar SDK, Freighter API
+- **AI Engine**: Anthropic Claude 3.5 Sonnet
+- **Styling**: Tailwind CSS 4, Framer Motion
+- **Typography**: DM Sans (Body), Space Grotesk (Headings)
 
-## Features
-- Real Stellar testnet transactions (verifiable on stellar.expert)
-- x402 micropayment gate per research query
-- Dark / Light mode toggle
-- Stellar brand design language
+## 🏆 Hackathon
+**Project built for**: [Stellar Hacks: Agents · DoraHacks 2026](https://dorahacks.io/)
 
-## Setup
-1. Clone the repo
-2. Add `.env` file with `VITE_GEMINI_API_KEY=your_key`
-3. Run `npm install && npm run dev`
-4. Fund your Stellar testnet account at friendbot.stellar.org
+## ✨ Features
+- **x402 Micropayment Gate**: Real onchain requirement for AI access.
+- **Verifiable Transactions**: Every research run is backed by a real Stellar testnet transaction hash.
+- **Stellar Brand Design**: Deep space navy aesthetic matching Stellar's official brand identity.
+- **Dark/Light Mode**: Persistent theme preference for optimal reading.
+- **Secure Local Signing**: Secret keys are used only for local signing and are never stored or transmitted.
 
-## Hackathon
-Stellar Hacks: Agents · DoraHacks 2026
-```
+## 🚀 Setup
+1. **Clone the repository**:
+   ```bash
+   git clone <repo-url>
+   cd stellarmind
+   ```
+2. **Configure Environment**:
+   Create a `.env` file (or use AI Studio Secrets):
+   ```env
+   VITE_ANTHROPIC_API_KEY=your_anthropic_api_key_here
+   ```
+3. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+4. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+---
+*StellarMind Protocol · Secure Research Node · 2026*
