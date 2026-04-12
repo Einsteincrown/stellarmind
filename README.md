@@ -1,27 +1,34 @@
 # StellarMind
 
-An Autonomous AI research agent on Stellar. Powered by x402 micropayments 
-on Stellar testnetpay per query.
+**Autonomous AI Research Agent on Stellar**
 
-## How It Works
-1. User submits a research query
-2. App signs and submits a real Stellar testnet transaction (x402 micropayment)
-3. Transaction confirmed onchain with memo "StellarMind:x402"
-4. AI research agent unlocks and returns a structured report
+StellarMind is an autonomous AI research agent that delivers sharp, crypto-native research reports. It is unlocked via an **x402 micropayment** on the Stellar network, ensuring a secure and verifiable value exchange for high-quality intelligence.
 
-## Tech Stack
-- React + TypeScript + Vite
-- Stellar SDK — testnet transactions
-- Gemini AI — research report generation
-- Tailwind CSS — Stellar-branded UI
-- Vercel — deployment
+## ✦ How It Works
+1. **Submit Query**: User enters a research query (e.g., "Analyze the impact of Soroban on Stellar TVL").
+2. **x402 Micropayment**: The app signs and submits a real Stellar testnet transaction (0.0001 XLM) with the required memo: `StellarMind:x402`.
+3. **Onchain Confirmation**: The transaction is confirmed on the Stellar blockchain.
+4. **AI Research**: Once confirmed, the StellarMind agent (powered by Claude 3.5 Sonnet) generates a structured, insightful research report.
+5. **Report Delivery**: The user receives a formatted report with Overview, Key Metrics, Recent Developments, and Outlook.
 
+## 🛠 Tech Stack
+- **Frontend**: React 19, TypeScript, Vite
+- **Blockchain**: Stellar SDK, Freighter API
+- **AI Engine**: Anthropic Claude 3.5 Sonnet
+- **Styling**: Tailwind CSS 4, Framer Motion
+- **Typography**: DM Sans (Body), Space Grotesk (Headings)
 
-## Hackathon
-Stellar Hacks: Agents · DoraHacks 2026
+## 🏆 Hackathon
+**Project built for**: [Stellar Hacks: Agents · DoraHacks 2026](https://dorahacks.io/)
 
+## ✨ Features
+- **x402 Micropayment Gate**: Real onchain requirement for AI access.
+- **Verifiable Transactions**: Every research run is backed by a real Stellar testnet transaction hash.
+- **Stellar Brand Design**: Deep space navy aesthetic matching Stellar's official brand identity.
+- **Dark/Light Mode**: Persistent theme preference for optimal reading.
+- **Secure Local Signing**: Secret keys are used only for local signing and are never stored or transmitted.
 
-## Setup
+## 🚀 Setup
 1. **Clone the repository**:
    ```bash
    git clone <repo-url>
@@ -41,3 +48,5 @@ Stellar Hacks: Agents · DoraHacks 2026
    npm run dev
    ```
 
+---
+*StellarMind Protocol · Secure Research Node · 2026*

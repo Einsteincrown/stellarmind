@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Sun, 
   Moon, 
-  Eye, 
-  EyeOff, 
   Search, 
-  Lock, 
   CheckCircle2, 
   Circle, 
   Loader2, 
@@ -38,14 +35,12 @@ export const StellarMind: React.FC = () => {
   });
 
   const [query, setQuery] = useState('');
-  const [secretKey, setSecretKey] = useState('');
-  const [showSecret, setShowSecret] = useState(false);
+  const secretKey = import.meta.env.VITE_STELLAR_SECRET_KEY;
   const [currentStep, setCurrentStep] = useState<Step>('idle');
   const [txHash, setTxHash] = useState<string | null>(null);
   const [report, setReport] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [isIframe, setIsIframe] = useState(false);
@@ -94,25 +89,14 @@ export const StellarMind: React.FC = () => {
     }
   };
 
-  const handleGenerateTestKey = async () => {
-    setIsGenerating(true);
-    setError(null);
-    try {
-      const { publicKey, secret } = createAccount();
-      await fundAccount(publicKey);
-      setSecretKey(secret);
-      setShowSecret(true);
-    } catch (err: any) {
-      console.error('Generation Error:', err);
-      setError('Failed to generate and fund a test account. Please try again or use the Stellar Laboratory link.');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
   const runAgent = async () => {
-    if (!query || !secretKey) {
-      setError('Please provide a research query and a secret key.');
+    if (!query) {
+      setError('Please provide a research query.');
+      return;
+    }
+
+    if (!secretKey) {
+      setError('Stellar configuration missing. Please set VITE_STELLAR_SECRET_KEY.');
       return;
     }
 
@@ -230,63 +214,14 @@ export const StellarMind: React.FC = () => {
                     className={`w-full h-32 p-4 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-stellar-blue/30 transition-all ${theme === 'dark' ? 'bg-stellar-navy/50 text-white placeholder:text-white/20' : 'bg-white text-stellar-navy placeholder:text-stellar-navy/20'}`}
                   />
                 </div>
-
-                {/* Secret Key Input */}
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold uppercase tracking-widest opacity-50 flex items-center gap-2">
-                      <Lock className="w-3 h-3" /> Stellar Authentication
-                    </label>
-                    <div className="flex items-center gap-3">
-                      <button 
-                        onClick={handleGenerateTestKey}
-                        disabled={isGenerating}
-                        className="text-[10px] text-stellar-purple hover:underline font-bold uppercase tracking-wider flex items-center gap-1 disabled:opacity-50"
-                      >
-                        {isGenerating ? <Loader2 className="w-2 h-2 animate-spin" /> : <Sparkles className="w-2 h-2" />}
-                        Generate & Fund
-                      </button>
-                      <a 
-                        href="https://laboratory.stellar.org/#account-creator?network=testnet" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-[10px] text-stellar-blue hover:underline font-bold uppercase tracking-wider"
-                      >
-                        Manual Setup
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div className="relative">
-                    <input 
-                      type={showSecret ? "text" : "password"}
-                      value={secretKey}
-                      onChange={(e) => {
-                        setSecretKey(e.target.value);
-                      }}
-                      placeholder="S..."
-                      className={`w-full p-4 pr-12 rounded-2xl focus:outline-none focus:ring-2 focus:ring-stellar-blue/30 transition-all font-mono text-sm ${theme === 'dark' ? 'bg-stellar-navy/50 text-white placeholder:text-white/20' : 'bg-white text-stellar-navy placeholder:text-stellar-navy/20'}`}
-                    />
-                    <button 
-                      onClick={() => setShowSecret(!showSecret)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-100 transition-opacity"
-                    >
-                      {showSecret ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                  </div>
-                  
-                  <p className="text-[10px] opacity-40 italic">
-                    Your key is used only to sign the x402 micropayment locally. It is never stored.
-                  </p>
-                </div>
               </div>
 
               {/* Run Button */}
               <div className="mt-8 space-y-4">
                 <button 
                   onClick={() => {
-                    if (!query || !secretKey) {
-                      setError('Please provide a research query and a secret key.');
+                    if (!query) {
+                      setError('Please provide a research query.');
                       return;
                     }
                     setShowConfirmModal(true);
