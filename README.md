@@ -13,11 +13,11 @@ Youtube link:https://youtu.be/KstEEPKNW1A?si=yLLNOWjVuKCp_SsH
 4. **AI Research**: Once confirmed, the StellarMind agent (powered by Gemini) generates a structured, insightful research report.
 5. **Report Delivery**: The user receives a formatted report with Overview, Key Metrics, Recent Developments, and Outlook.
 
-## 🏆 Hackathon
+## Hackathon
 **Project built for**: [Stellar Hacks: Agents · DoraHacks 2026](https://dorahacks.io/)
 
 
-##  Setup
+## Setup
 1. **Clone the repository**:
    ```bash
    git clone <repo-url>
