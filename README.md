@@ -4,13 +4,13 @@ StellarMind is an autonomous AI research agent that delivers sharp, crypto nativ
 
 Demo link:https://stellarmind-steel.vercel.app/
 
-GitHub:https://github.com/Einsteincrown/stellarmind
+Youtube link:https://youtu.be/KstEEPKNW1A?si=yLLNOWjVuKCp_SsH
 
 ## ✦ How It Works
 1. **Submit Query**: User enters a research query (e.g., "Analyze the impact of Soroban on Stellar TVL").
 2. **x402 Micropayment**: The app signs and submits a real Stellar testnet transaction (0.0001 XLM) with the required memo: `StellarMind:x402`.
 3. **Onchain Confirmation**: The transaction is confirmed on the Stellar blockchain.
-4. **AI Research**: Once confirmed, the StellarMind agent (powered by Claude 3.5 Sonnet) generates a structured, insightful research report.
+4. **AI Research**: Once confirmed, the StellarMind agent (powered by Gemini) generates a structured, insightful research report.
 5. **Report Delivery**: The user receives a formatted report with Overview, Key Metrics, Recent Developments, and Outlook.
 
 ## 🏆 Hackathon
